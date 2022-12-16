@@ -28,5 +28,5 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: |
-          npm adduser warchat
+          npm login
           npm publish
