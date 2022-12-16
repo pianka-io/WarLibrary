@@ -21,7 +21,7 @@ jobs:
 
       - name: Build
         run: |
-          npm ci && npm run build
+          npm ci
           tsc
 
       - name: Publish
