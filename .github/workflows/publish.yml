@@ -32,4 +32,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn publish
+          npm publish
