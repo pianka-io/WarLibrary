@@ -19,9 +19,10 @@ jobs:
       - name: Install
         uses: actions/setup-node@v3
         with:
+          always-auth: true
+          cache: npm
           node-version: 16
           registry-url: 'https://npm.pkg.github.com'
-          cache: npm
 
       - name: Build
         run: |
