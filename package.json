@@ -1,0 +1,21 @@
+{
+  "name": "warlibrary",
+  "version": "0.0.0",
+  "description": "Common functionality between warnet applications",
+  "repository": "git@github.com:KnightsOfGlory/WarLibrary.git",
+  "author": "Knights of Glory",
+  "license": "MIT",
+  "keywords": [],
+  "homepage": "https://www.knightsofglory.io",
+  "bugs": "https://github.com/KnightsOfGlory/WarLibrary/issues",
+  "contributors": [],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/*"
+  ],
+  "bin": {},
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}
