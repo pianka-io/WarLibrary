@@ -2,7 +2,6 @@
   "name": "@knightsofglory/warlibrary",
   "version": "0.0.0",
   "description": "Common functionality between warnet applications",
-  "repository": "https://github.com/KnightsOfGlory/WarLibrary.git",
   "author": "Knights of Glory",
   "license": "MIT",
   "keywords": [],
@@ -18,7 +17,4 @@
   "devDependencies": {
     "typescript": "^4.9.4"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  }
 }
