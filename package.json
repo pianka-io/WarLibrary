@@ -1,5 +1,5 @@
 {
-  "name": "warlibrary",
+  "name": "@knightsofglory/warlibrary",
   "version": "0.0.0",
   "description": "Common functionality between warnet applications",
   "repository": "https://github.com/KnightsOfGlory/WarLibrary.git",
