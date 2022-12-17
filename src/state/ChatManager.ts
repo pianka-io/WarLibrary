@@ -129,6 +129,7 @@ export class ChatManager {
                         this.subscriptions.dispatch("chats", this.chats)
                         break
                     case Protocols.Classic.INFO:
+                        innerMessage = ProtocolHelper.parseQuoted(message)
                         if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                             !((innerMessage.match(/ \|/g) || []).length >= 3)) {
 
@@ -234,6 +235,7 @@ export class ChatManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                             case Protocols.Init6.Events.TOPIC:
+                                innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                                     !((innerMessage.match(/ \|/g) || []).length >= 3)) {
 
