@@ -3,18 +3,22 @@ import {References} from "../References";
 
 export type Settings = {
     autoReconnect: boolean,
+    separateBots: boolean
     ignoreEmotes: boolean,
     ignoreAntiIdles: boolean,
-    separateBots: boolean
+    ignoreBots: boolean,
+    ignoreBans: boolean
 }
 
 export class SettingsManager {
 
     private defaultSettings = {
         autoReconnect: true,
+        separateBots: true,
         ignoreEmotes: false,
         ignoreAntiIdles: false,
-        separateBots: true
+        ignoreBots: false,
+        ignoreBans: false
     }
     private settings: Settings = this.defaultSettings
 
