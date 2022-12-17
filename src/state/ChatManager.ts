@@ -129,7 +129,9 @@ export class ChatManager {
                         this.subscriptions.dispatch("chats", this.chats)
                         break
                     case Protocols.Classic.INFO:
-                        if (!this.ignoreInfo) {
+                        if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                            !((innerMessage.match(/ \|/g) || []).length >= 3)) {
+
                             innerMessage = ProtocolHelper.parseQuoted(message)
                             this.chats.push({
                                 timestamp: Date.now(),
@@ -232,7 +234,9 @@ export class ChatManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                             case Protocols.Init6.Events.TOPIC:
-                                if (!this.ignoreInfo) {
+                                if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                                    !((innerMessage.match(/ \|/g) || []).length >= 3)) {
+
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
                                     this.chats.push({
                                         timestamp: Date.now(),

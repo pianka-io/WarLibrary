@@ -26,7 +26,6 @@ export class ChannelManager implements StateManager {
         this.subscriptions.addSubscription(event, a)
     }
 
-    private counter = 0
     private listen() {
         References.connectionManager.subscribe("connected", () => {
             this.channels = [];
@@ -78,9 +77,8 @@ export class ChannelManager implements StateManager {
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) {
-                            this.counter = Number(innerMessage.split(" ")[1])
                             this.channels = []
-                        } else if (this.counter > 0) {
+                        } else if ((innerMessage.match(/ \|/g) || []).length >= 3) {
                             let tokens = innerMessage.split("|")
                             this.channels.push({
                                 name: tokens[0].trim(),
@@ -88,11 +86,6 @@ export class ChannelManager implements StateManager {
                                 users: Number(tokens[1].trim())
                             })
                             this.subscriptions.dispatch("list", this.channels)
-                            this.counter--
-
-                            if (this.counter == 0) {
-                                setTimeout(() => References.chatManager.ignoreInfo = false, 100)
-                            }
                         }
                         break
                 }
@@ -113,7 +106,7 @@ export class ChannelManager implements StateManager {
                                 this.subscriptions.dispatch("current", this.currentChannel)
 
                                 if (this.currentChannel.name == "Chat") {
-                                    References.chatManager.ignoreInfo = true
+                                    // References.chatManager.ignoreInfo = true
                                     References.messageBus.send("chat", "/channels")
                                 }
                                 break
@@ -124,9 +117,8 @@ export class ChannelManager implements StateManager {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) {
-                                    this.counter = Number(innerMessage.split(" ")[1])
                                     this.channels = []
-                                } else if (this.counter > 0) {
+                                } else if ((innerMessage.match(/ \|/g) || []).length >= 3) {
                                     let tokens = innerMessage.split("|")
                                     this.channels.push({
                                         name: tokens[0].trim(),
@@ -134,11 +126,6 @@ export class ChannelManager implements StateManager {
                                         users: Number(tokens[1].trim())
                                     })
                                     this.subscriptions.dispatch("list", this.channels)
-                                    this.counter--
-
-                                    if (this.counter == 0) {
-                                        References.chatManager.ignoreInfo = false
-                                    }
                                 }
                                 break
                         }
