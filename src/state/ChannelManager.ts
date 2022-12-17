@@ -44,7 +44,6 @@ export class ChannelManager implements StateManager {
         })
 
         setInterval(() => {
-            References.chatManager.ignoreInfo = true
             References.messageBus.send("chat", "/channels")
         }, 60*1000)
 
@@ -69,10 +68,7 @@ export class ChannelManager implements StateManager {
                             users: 0
                         }
                         this.subscriptions.dispatch("current", this.currentChannel)
-                        if (this.currentChannel.name == "Chat") {
-                            References.chatManager.ignoreInfo = true
-                            References.messageBus.send("chat", "/channels")
-                        }
+                        References.messageBus.send("chat", "/channels")
                         break
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -105,10 +101,7 @@ export class ChannelManager implements StateManager {
                                 }
                                 this.subscriptions.dispatch("current", this.currentChannel)
 
-                                if (this.currentChannel.name == "Chat") {
-                                    // References.chatManager.ignoreInfo = true
-                                    References.messageBus.send("chat", "/channels")
-                                }
+                                References.messageBus.send("chat", "/channels")
                                 break
                         }
                         break
