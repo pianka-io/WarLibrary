@@ -91,7 +91,7 @@ export class ChannelManager implements StateManager {
                             this.counter--
 
                             if (this.counter == 0) {
-                                References.chatManager.ignoreInfo = false
+                                setTimeout(() => References.chatManager.ignoreInfo = false, 100)
                             }
                         }
                         break
