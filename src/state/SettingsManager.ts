@@ -4,6 +4,7 @@ import {References} from "../References";
 export type Settings = {
     autoReconnect: boolean,
     ignoreEmotes: boolean,
+    ignoreAntiIdles: boolean,
     separateBots: boolean
 }
 
@@ -12,6 +13,7 @@ export class SettingsManager {
     private defaultSettings = {
         autoReconnect: true,
         ignoreEmotes: false,
+        ignoreAntiIdles: false,
         separateBots: true
     }
     private settings: Settings = this.defaultSettings
