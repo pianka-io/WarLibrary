@@ -76,6 +76,10 @@ export class ChannelManager implements StateManager {
                             this.channels = []
                         } else if ((innerMessage.match(/ \|/g) || []).length >= 3) {
                             let tokens = innerMessage.split("|")
+                            let name = tokens[0].trim()
+
+                            if (this.channels.findIndex(c => c.name == name) > -1) return
+
                             this.channels.push({
                                 name: tokens[0].trim(),
                                 topic: tokens[3].trim(),
@@ -100,7 +104,6 @@ export class ChannelManager implements StateManager {
                                     users: 0
                                 }
                                 this.subscriptions.dispatch("current", this.currentChannel)
-
                                 References.messageBus.send("chat", "/channels")
                                 break
                         }
@@ -113,6 +116,10 @@ export class ChannelManager implements StateManager {
                                     this.channels = []
                                 } else if ((innerMessage.match(/ \|/g) || []).length >= 3) {
                                     let tokens = innerMessage.split("|")
+                                    let name = tokens[0].trim()
+
+                                    if (this.channels.findIndex(c => c.name == name) > -1) return
+
                                     this.channels.push({
                                         name: tokens[0].trim(),
                                         topic: tokens[3].trim(),
