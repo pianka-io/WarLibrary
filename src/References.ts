@@ -6,6 +6,7 @@ import {ConnectionManager} from "./state/ConnectionManager";
 import {UserManager} from "./state/UserManager";
 import {ChannelManager} from "./state/ChannelManager";
 import {ChatManager} from "./state/ChatManager";
+import {FriendsManager} from "./state/FriendsManager";
 
 export namespace References {
 
@@ -19,4 +20,5 @@ export namespace References {
     export let userManager: UserManager
     export let channelManager: ChannelManager
     export let chatManager: ChatManager
+    export let friendsManager: FriendsManager
 }
