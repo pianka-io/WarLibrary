@@ -39,10 +39,12 @@ export class FriendsManager implements StateManager {
     }
 
     public subscribe<A>(event: Event, a: EventSubscription<A>) {
+        console.log("subscribed")
         this.subscriptions.addSubscription(event, a)
     }
 
     public getFriends() {
+        console.log("getFriends: " + this.friends)
         return this.friends
     }
 
@@ -76,8 +78,6 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
-                                console.log("fields: " + fields)
-                                console.log("message: " + fields.slice(2))
                                 this.handleMessage(fields.slice(2))
                                 break
                         }
@@ -87,24 +87,22 @@ export class FriendsManager implements StateManager {
     }
 
     private handleMessage(message: string[]) {
-        console.log("HANDLE MESSAGE")
         const stringified = message.join(" ")
-        console.log("stringified: " + stringified)
 
         // incoming list
         if (FriendsHelper.header(stringified)) {
-            console.log("LIST")
             this.friends = []
             this.subscriptions.dispatch("list", this.friends)
         // friend list item
         } else if (FriendsHelper.friend(stringified)) {
-            console.log("ITEM")
             const friend = FriendsHelper.parseFriend(stringified)
             this.friends.push(friend)
+            console.log("friend: " + friend)
+            console.log("friends: " + this.friends)
             this.subscriptions.dispatch("list", this.friends)
+            console.log("dispatch")
         // successes
         } else if (FriendsHelper.addedFriend(stringified)) {
-            console.log("ADDED")
             const success: Result = {
                 success: true,
                 action: "add",
@@ -114,7 +112,6 @@ export class FriendsManager implements StateManager {
             this.subscriptions.dispatch("result", success)
             References.messageBus.send("chat", "/friends list")
         } else if (FriendsHelper.removedFriend(stringified)) {
-            console.log("REMOVED")
             const success: Result = {
                 success: true,
                 action: "remove",
