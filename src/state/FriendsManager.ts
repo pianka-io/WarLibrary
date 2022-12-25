@@ -42,6 +42,14 @@ export class FriendsManager implements StateManager {
         this.subscriptions.addSubscription(event, a)
     }
 
+    public addFriend(name: string) {
+        References.messageBus.send("chat", "/friends add " + name)
+    }
+
+    public removeFriend(name: string) {
+        References.messageBus.send("chat", "/friends remove " + name)
+    }
+
     public getFriends() {
         return this.friends
     }

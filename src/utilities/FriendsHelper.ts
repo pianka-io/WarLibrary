@@ -2,17 +2,17 @@ import {Friend} from "../state/FriendsManager";
 
 export namespace FriendsHelper {
 
-    export const header             = (message: string) => message === "Your friends are:"
+    export const header             = (message: string) => message.startsWith("Your friends are:")
     export const friend             = (message: string) => message.includes(" in the channel ") || message.endsWith(", offline.")
 
     export const addedFriend        = (message: string) => message.startsWith("Added ") && message.endsWith(" to your friends list.")
     export const removedFriend      = (message: string) => message.startsWith("Removed ") && message.endsWith(" from your friends list.")
 
-    export const addMaximumReached  = (message: string) => message === "You already have the maximum number of friends in your list. You will need to remove some of your friends before adding more."
-    export const addNoUsername      = (message: string) => message === "You need to supply the account name of the friend you wish to add to your list."
-    export const addNoYourself      = (message: string) => message === "You can't add yourself to your friends list."
-    export const noFriends          = (message: string) => message === "You don't have any friends in your list. Use /friends add USERNAME to add a friend to your list."
-    export const removeNoUsername   = (message: string) => message === "You need to supply the account name of the friend you wish to remove from your list."
+    export const addMaximumReached  = (message: string) => message.startsWith("You already have the maximum number of friends in your list. You will need to remove some of your friends before adding more.")
+    export const addNoUsername      = (message: string) => message.startsWith("You need to supply the account name of the friend you wish to add to your list.")
+    export const addNoYourself      = (message: string) => message.startsWith("You can't add yourself to your friends list.")
+    export const noFriends          = (message: string) => message.startsWith("You don't have any friends in your list. Use /friends add USERNAME to add a friend to your list.")
+    export const removeNoUsername   = (message: string) => message.startsWith("You need to supply the account name of the friend you wish to remove from your list.")
     export const removeNotAdded     = (message: string) => message.endsWith(" was not in your friends list.")
 
     const online = /(\d+): (.+), using ([\w ]+) in the channel (.+) on server (.+)\./
