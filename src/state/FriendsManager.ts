@@ -69,7 +69,6 @@ export class FriendsManager implements StateManager {
                         return // don't parse init 6
                 }
 
-
                 // init 6 proprietary
                 const event = () => fields[1]
 
@@ -77,6 +76,8 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
+                                console.log("fields: " + fields)
+                                console.log("message: " + fields.slice(2))
                                 this.handleMessage(fields.slice(2))
                                 break
                         }
@@ -86,19 +87,24 @@ export class FriendsManager implements StateManager {
     }
 
     private handleMessage(message: string[]) {
+        console.log("HANDLE MESSAGE")
         const stringified = message.join(" ")
+        console.log("stringified: " + stringified)
 
         // incoming list
         if (FriendsHelper.header(stringified)) {
+            console.log("LIST")
             this.friends = []
             this.subscriptions.dispatch("list", this.friends)
         // friend list item
         } else if (FriendsHelper.friend(stringified)) {
+            console.log("ITEM")
             const friend = FriendsHelper.parseFriend(stringified)
             this.friends.push(friend)
             this.subscriptions.dispatch("list", this.friends)
         // successes
         } else if (FriendsHelper.addedFriend(stringified)) {
+            console.log("ADDED")
             const success: Result = {
                 success: true,
                 action: "add",
@@ -108,6 +114,7 @@ export class FriendsManager implements StateManager {
             this.subscriptions.dispatch("result", success)
             References.messageBus.send("chat", "/friends list")
         } else if (FriendsHelper.removedFriend(stringified)) {
+            console.log("REMOVED")
             const success: Result = {
                 success: true,
                 action: "remove",
