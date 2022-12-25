@@ -15,29 +15,29 @@ export namespace FriendsHelper {
     export const removeNoUsername   = (message: string) => message === "You need to supply the account name of the friend you wish to remove from your list."
     export const removeNotAdded     = (message: string) => message.endsWith(" was not in your friends list.")
 
-    const online = /(?<position>\d+): (?<name>.+), using (?<client>[\\w ]+) in the channel (?<channel>.+) on server (?<server>.+)\./g
-    const offline = /(?<position>\d+): (?<name>.+), offline\./g
+    const online = /(\d+): (.+), using ([\w ]+) in the channel (.+) on server (.+)\./
+    const offline = /(\d+): (.+), offline\./
     export function parseFriend(message: string): Friend {
         const onlineMatch = message.match(online)
         const offlineMatch = message.match(offline)
 
-        if (onlineMatch.length > 0) {
+        if (onlineMatch) {
             return {
-                name: onlineMatch[1],
+                name: onlineMatch[2],
                 online: true,
-                server: onlineMatch[4],
-                client: parseClient(onlineMatch[2]),
-                channel: onlineMatch[3],
-                position: parseInt(onlineMatch[0]),
+                server: onlineMatch[5],
+                client: parseClient(onlineMatch[3]),
+                channel: onlineMatch[4],
+                position: parseInt(onlineMatch[1]),
             }
         } else {
             return {
-                name: offlineMatch[1],
+                name: offlineMatch[2],
                 online: false,
                 server: null,
                 client: null,
                 channel: null,
-                position: parseInt(onlineMatch[0]),
+                position: parseInt(onlineMatch[1]),
             }
         }
     }
