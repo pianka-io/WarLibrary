@@ -82,7 +82,7 @@ export class FriendsManager implements StateManager {
     }
 
     private handleMessage(message: string[]) {
-        const stringified = message.join("")
+        const stringified = message.join(" ")
 
         // incoming list
         if (FriendsHelper.header(stringified)) {
