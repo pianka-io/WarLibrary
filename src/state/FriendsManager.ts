@@ -43,6 +43,10 @@ export class FriendsManager implements StateManager {
         this.subscriptions.addSubscription(event, a)
     }
 
+    public list() {
+        References.messageBus.send("chat", "/friends list")
+    }
+
     public addFriend(name: string) {
         References.messageBus.send("chat", "/friends add " + name)
     }
@@ -56,9 +60,7 @@ export class FriendsManager implements StateManager {
     }
 
     private listen() {
-        setInterval(() => {
-            References.messageBus.send("chat", "/friends list")
-        }, 60*1000)
+        setInterval(() => this.list(), 30*1000)
 
         References.messageBus.on(Messages.Channels.MESSAGES, (arg) => {
 
@@ -70,19 +72,30 @@ export class FriendsManager implements StateManager {
 
                 let fields = message.split(" ")
                 let code = fields[0]
+                let innerMessage: string
 
                 // classic telnet
                 switch (code) {
+                    case Protocols.Classic.CHANNEL:
+                        this.list()
+                        return
                     case Protocols.Classic.INFO:
-                        const innerMessage = ProtocolHelper.parseQuoted(string)
+                        innerMessage = ProtocolHelper.parseQuoted(string)
                         this.handleMessage(innerMessage)
-                        return // don't parse init 6
+                        return
                 }
 
                 // init 6 proprietary
                 const event = () => fields[1]
 
                 switch (code) {
+                    case Protocols.Init6.Commands.CHANNEL:
+                        switch (event()) {
+                            case Protocols.Init6.Events.JOIN:
+                                this.list()
+                                break
+                        }
+                        break
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:

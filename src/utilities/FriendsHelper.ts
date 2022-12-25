@@ -28,30 +28,21 @@ export namespace FriendsHelper {
                removeNotAdded(message)
     }
 
-    const online = /(\d+): (.+), using ([\w ]+) in the channel (.+) on server (.+)\./
-    const offline = /(\d+): (.+), offline\./
+    const onlinePattern = /(\d+): (.+), using ([\w ]+) in the channel (.+) on server (.+)\./
+    const offlinePattern = /(\d+): (.+), offline\./
     export function parseFriend(message: string): Friend {
-        const onlineMatch = message.match(online)
-        const offlineMatch = message.match(offline)
+        const onlineMatch = message.match(onlinePattern)
+        const offlineMatch = message.match(offlinePattern)
 
-        if (onlineMatch) {
-            return {
-                name: onlineMatch[2],
-                online: true,
-                server: onlineMatch[5],
-                client: parseClient(onlineMatch[3]),
-                channel: onlineMatch[4],
-                position: parseInt(onlineMatch[1]),
-            }
-        } else {
-            return {
-                name: offlineMatch[2],
-                online: false,
-                server: null,
-                client: null,
-                channel: null,
-                position: parseInt(onlineMatch[1]),
-            }
+        const online = !!onlineMatch
+
+        return {
+            name:       online ? onlineMatch[2] : offlineMatch[2],
+            online:     online,
+            server:     online ? onlineMatch[5] : null,
+            client:     online ? parseClient(onlineMatch[3]) : null,
+            channel:    online ? onlineMatch[4] : null,
+            position:   online ? parseInt(onlineMatch[1]) : parseInt(offlineMatch[1]),
         }
     }
 
