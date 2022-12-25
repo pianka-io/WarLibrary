@@ -64,6 +64,8 @@ export class FriendsManager implements StateManager {
             let string = arg as string
             let messages = string.split("\r\n")
 
+            console.log(string)
+
             messages.forEach((message) => {
                 if (message.trim().length == 0) return
 
