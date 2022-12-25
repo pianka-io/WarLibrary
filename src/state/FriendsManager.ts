@@ -42,6 +42,10 @@ export class FriendsManager implements StateManager {
         this.subscriptions.addSubscription(event, a)
     }
 
+    public getFriends() {
+        return this.friends
+    }
+
     private listen() {
         setInterval(() => {
             References.messageBus.send("chat", "/friends list")
