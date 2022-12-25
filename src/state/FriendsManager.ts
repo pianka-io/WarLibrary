@@ -39,13 +39,11 @@ export class FriendsManager implements StateManager {
     }
 
     public subscribe<A>(event: Event, a: EventSubscription<A>) {
-        console.log("subscribed")
         this.subscriptions.addSubscription(event, a)
     }
 
     public getFriends() {
         console.log("getFriends: " + this.friends)
-        return this.friends
     }
 
     private listen() {
@@ -87,7 +85,7 @@ export class FriendsManager implements StateManager {
     }
 
     private handleMessage(message: string[]) {
-        const stringified = message.join(" ")
+        const stringified = message.join(" ").trim()
 
         // incoming list
         if (FriendsHelper.header(stringified)) {
@@ -97,10 +95,7 @@ export class FriendsManager implements StateManager {
         } else if (FriendsHelper.friend(stringified)) {
             const friend = FriendsHelper.parseFriend(stringified)
             this.friends.push(friend)
-            console.log("friend: " + friend)
-            console.log("friends: " + this.friends)
             this.subscriptions.dispatch("list", this.friends)
-            console.log("dispatch")
         // successes
         } else if (FriendsHelper.addedFriend(stringified)) {
             const success: Result = {
