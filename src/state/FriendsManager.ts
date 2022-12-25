@@ -43,7 +43,7 @@ export class FriendsManager implements StateManager {
     }
 
     public getFriends() {
-        console.log("getFriends: " + this.friends)
+        return this.friends
     }
 
     private listen() {
