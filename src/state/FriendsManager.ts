@@ -4,6 +4,7 @@ import {References} from "../References";
 import {Messages} from "../common/Messages";
 import {Protocols} from "../common/Protocols";
 import {FriendsHelper} from "../utilities/FriendsHelper";
+import {ProtocolHelper} from "../utilities/ProtocolHelper";
 
 export type Friend = {
     name: string,
@@ -64,8 +65,6 @@ export class FriendsManager implements StateManager {
             let string = arg as string
             let messages = string.split("\r\n")
 
-            console.log(string)
-
             messages.forEach((message) => {
                 if (message.trim().length == 0) return
 
@@ -75,7 +74,8 @@ export class FriendsManager implements StateManager {
                 // classic telnet
                 switch (code) {
                     case Protocols.Classic.INFO:
-                        this.handleMessage(fields.slice(2))
+                        const innerMessage = ProtocolHelper.parseQuoted(string)
+                        this.handleMessage(innerMessage)
                         return // don't parse init 6
                 }
 
@@ -86,7 +86,8 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
-                                this.handleMessage(fields.slice(2))
+                                const innerMessage = ProtocolHelper.parseInit6(string, 6)
+                                this.handleMessage(innerMessage)
                                 break
                         }
                 }
@@ -94,20 +95,18 @@ export class FriendsManager implements StateManager {
         })
     }
 
-    private handleMessage(message: string[]) {
-        const stringified = message.join(" ").trim()
-
+    private handleMessage(message: string) {
         // incoming list
-        if (FriendsHelper.header(stringified)) {
+        if (FriendsHelper.header(message)) {
             this.friends = []
             this.subscriptions.dispatch("list", this.friends)
         // friend list item
-        } else if (FriendsHelper.friend(stringified)) {
-            const friend = FriendsHelper.parseFriend(stringified)
+        } else if (FriendsHelper.friend(message)) {
+            const friend = FriendsHelper.parseFriend(message)
             this.friends.push(friend)
             this.subscriptions.dispatch("list", this.friends)
         // successes
-        } else if (FriendsHelper.addedFriend(stringified)) {
+        } else if (FriendsHelper.addedFriend(message)) {
             const success: Result = {
                 success: true,
                 action: "add",
@@ -116,7 +115,7 @@ export class FriendsManager implements StateManager {
             }
             this.subscriptions.dispatch("result", success)
             References.messageBus.send("chat", "/friends list")
-        } else if (FriendsHelper.removedFriend(stringified)) {
+        } else if (FriendsHelper.removedFriend(message)) {
             const success: Result = {
                 success: true,
                 action: "remove",
@@ -126,7 +125,7 @@ export class FriendsManager implements StateManager {
             this.subscriptions.dispatch("result", success)
             References.messageBus.send("chat", "/friends list")
         // errors
-        } else if (FriendsHelper.addMaximumReached(stringified)) {
+        } else if (FriendsHelper.addMaximumReached(message)) {
             const error: Result = {
                 success: false,
                 action: "add",
@@ -134,7 +133,7 @@ export class FriendsManager implements StateManager {
                 error: "maximum",
             }
             this.subscriptions.dispatch("result", error)
-        } else if (FriendsHelper.addNoUsername(stringified)) {
+        } else if (FriendsHelper.addNoUsername(message)) {
             const error: Result = {
                 success: false,
                 action: "add",
@@ -142,7 +141,7 @@ export class FriendsManager implements StateManager {
                 error: "username",
             }
             this.subscriptions.dispatch("result", error)
-        } else if (FriendsHelper.addNoYourself(stringified)) {
+        } else if (FriendsHelper.addNoYourself(message)) {
             const error: Result = {
                 success: false,
                 action: "add",
@@ -150,7 +149,7 @@ export class FriendsManager implements StateManager {
                 error: "yourself",
             }
             this.subscriptions.dispatch("result", error)
-        } else if (FriendsHelper.noFriends(stringified)) {
+        } else if (FriendsHelper.noFriends(message)) {
             const error: Result = {
                 success: false,
                 action: "list",
@@ -158,7 +157,7 @@ export class FriendsManager implements StateManager {
                 error: "empty",
             }
             this.subscriptions.dispatch("result", error)
-        } else if (FriendsHelper.removeNoUsername(stringified)) {
+        } else if (FriendsHelper.removeNoUsername(message)) {
             const error: Result = {
                 success: false,
                 action: "remove",
@@ -166,7 +165,7 @@ export class FriendsManager implements StateManager {
                 error: "username",
             }
             this.subscriptions.dispatch("result", error)
-        } else if (FriendsHelper.removeNotAdded(stringified)) {
+        } else if (FriendsHelper.removeNotAdded(message)) {
             const error: Result = {
                 success: false,
                 action: "remove",
