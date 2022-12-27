@@ -22,7 +22,7 @@ export class UserManager implements StateManager {
     }
 
     public getConnectedUser(): User {
-        return this.getByUsername(this.self)
+        return this.getByUsername(References.profileManager.getProfile().username)
     }
 
     public getServerUser(): User {
