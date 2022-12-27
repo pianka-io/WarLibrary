@@ -18,6 +18,7 @@ export type ChatEvent = "talk" | "emote" | "whisper" | "info" | "error" | "broad
 
 export class ChatManager {
     private chats: Chat[] = []
+    private whispers: Chat[] = []
 
     private subscriptions: SubscriptionManager = new SubscriptionManager()
 
@@ -59,7 +60,9 @@ export class ChatManager {
                     case Protocols.Classic.WHISPER_IN:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         this.chats.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
+                        this.whispers.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
+                        this.subscriptions.dispatch("whispers", this.whispers)
                         return
                     case Protocols.Classic.TALK:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -81,7 +84,9 @@ export class ChatManager {
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         this.chats.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
+                        this.whispers.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
+                        this.subscriptions.dispatch("whispers", this.whispers)
                         break
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
