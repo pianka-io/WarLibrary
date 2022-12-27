@@ -4,41 +4,17 @@ import {Protocols} from "../common/Protocols";
 import {Event, EventSubscription, SubscriptionManager} from "../SubscriptionManager";
 import {References} from "../References";
 import {ProtocolHelper} from "../utilities/ProtocolHelper";
+import {ChatHelper} from "../utilities/ChatHelper";
 
-export type Talk = {
+export type Chat = {
     timestamp: number,
+    event: ChatEvent,
     user: User,
-    message: string
+    message: string | null,
+    channel: string | null
 }
 
-export type Emote = {
-    timestamp: number,
-    user: User,
-    isEmote: boolean,
-    message: string
-}
-
-export type Info = {
-    timestamp: number,
-    user: User,
-    message: string
-}
-
-export type Error = {
-    timestamp: number,
-    user: User,
-    message: string,
-    isError: boolean
-}
-
-export type Enter = {
-    timestamp: number,
-    user: User,
-    channel: string,
-    message: string
-}
-
-export type Chat = Talk | Emote | Info | Error | Enter
+export type ChatEvent = "talk" | "emote" | "whisper" | "info" | "error" | "broadcast" | "channel"
 
 export class ChatManager {
     private chats: Chat[] = []
@@ -82,50 +58,29 @@ export class ChatManager {
                 switch (code) {
                     case Protocols.Classic.WHISPER_IN:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: {name: name(), client: "[NONE]", flags: "", bot: false},
-                            message: "(whisper) " + innerMessage
-                        })
+                        this.chats.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
-                        break
+                        return
                     case Protocols.Classic.TALK:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: References.userManager.getByUsername(name()),
-                            message: innerMessage
-                        })
+                        this.chats.push(ChatHelper.makeTalkChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
-                        break
+                        return
                     case Protocols.Classic.BROADCAST:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: References.userManager.getServerUser(),
-                            message: innerMessage
-                        })
+                        this.chats.push(ChatHelper.makeBroadcastChat(innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
-                        break
+                        return
                     case Protocols.Classic.CHANNEL:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage != "Chat") {
-                            this.chats.push({
-                                timestamp: Date.now(),
-                                user: References.userManager.getWarChatUser(),
-                                channel: innerMessage,
-                                message: ""
-                            })
+                            this.chats.push(ChatHelper.makeChannelChat(innerMessage))
                             this.subscriptions.dispatch("chats", this.chats)
                         }
-                        break
+                        return
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: References.userManager.getConnectedUser(),
-                            message: "(to " + name() + ") " + innerMessage
-                        })
+                        this.chats.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
                         break
                     case Protocols.Classic.INFO:
@@ -134,34 +89,20 @@ export class ChatManager {
                             !((innerMessage.match(/\| /g) || []).length == 3)) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
-                            this.chats.push({
-                                timestamp: Date.now(),
-                                user: References.userManager.getServerUser(),
-                                message: innerMessage,
-                            })
+                            this.chats.push(ChatHelper.makeInfoChat(innerMessage))
                             this.subscriptions.dispatch("chats", this.chats)
                         }
-                        break
+                        return
                     case Protocols.Classic.ERROR:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: References.userManager.getServerUser(),
-                            message: innerMessage,
-                            isError: true
-                        })
+                        this.chats.push(ChatHelper.makeErrorChat(innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
-                        break
+                        return
                     case Protocols.Classic.EMOTE:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push({
-                            timestamp: Date.now(),
-                            user: References.userManager.getByUsername(name()),
-                            isEmote: true,
-                            message: innerMessage
-                        })
+                        this.chats.push(ChatHelper.makeEmoteChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
-                        break
+                        return
                 }
 
                 // init 6 proprietary
@@ -176,41 +117,24 @@ export class ChatManager {
                                 switch (direction()) {
                                     case Protocols.Init6.Directions.FROM:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        this.chats.push({
-                                            timestamp: Date.now(),
-                                            user: {name: name(), client: "[NONE]", flags: "", bot: false},
-                                            message: "(whisper) " + innerMessage
-                                        })
+                                        this.chats.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
                                         this.subscriptions.dispatch("chats", this.chats)
                                         break
                                     case Protocols.Init6.Directions.TO:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        this.chats.push({
-                                            timestamp: Date.now(),
-                                            user: References.userManager.getConnectedUser(),
-                                            message: "(to " + name() + ") " + innerMessage
-                                        })
+                                        this.chats.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
                                         this.subscriptions.dispatch("chats", this.chats)
                                         break
                                 }
                                 break
                             case Protocols.Init6.Events.TALK:
                                 innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                this.chats.push({
-                                    timestamp: Date.now(),
-                                    user: References.userManager.getByUsername(name()),
-                                    message: innerMessage
-                                })
+                                this.chats.push(ChatHelper.makeTalkChat(name(), innerMessage))
                                 this.subscriptions.dispatch("chats", this.chats)
                                 break
                             case Protocols.Init6.Events.EMOTE:
                                 innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                this.chats.push({
-                                    timestamp: Date.now(),
-                                    user: References.userManager.getByUsername(name()),
-                                    isEmote: true,
-                                    message: innerMessage
-                                })
+                                this.chats.push(ChatHelper.makeEmoteChat(name(), innerMessage))
                                 this.subscriptions.dispatch("chats", this.chats)
                                 break
                         }
@@ -220,12 +144,7 @@ export class ChatManager {
                             case Protocols.Init6.Events.JOIN:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage != "Chat") {
-                                    this.chats.push({
-                                        timestamp: Date.now(),
-                                        user: References.userManager.getWarChatUser(),
-                                        channel: innerMessage,
-                                        message: ""
-                                    })
+                                    this.chats.push(ChatHelper.makeInfoChat(innerMessage))
                                     this.subscriptions.dispatch("chats", this.chats)
                                 }
                                 break
@@ -240,31 +159,18 @@ export class ChatManager {
                                     !((innerMessage.match(/\| /g) || []).length == 3)) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                    this.chats.push({
-                                        timestamp: Date.now(),
-                                        user: References.userManager.getServerUser(),
-                                        message: innerMessage,
-                                    })
+                                    this.chats.push(ChatHelper.makeInfoChat(innerMessage))
                                     this.subscriptions.dispatch("chats", this.chats)
                                 }
                                 break
                             case Protocols.Init6.Events.ERROR:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                this.chats.push({
-                                    timestamp: Date.now(),
-                                    user: References.userManager.getServerUser(),
-                                    message: innerMessage,
-                                    isError: true
-                                })
+                                this.chats.push(ChatHelper.makeErrorChat(innerMessage))
                                 this.subscriptions.dispatch("chats", this.chats)
                                 break
                             case Protocols.Init6.Events.BROADCAST:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                this.chats.push({
-                                    timestamp: Date.now(),
-                                    user: References.userManager.getServerUser(),
-                                    message: innerMessage
-                                })
+                                this.chats.push(ChatHelper.makeBroadcastChat(innerMessage))
                                 this.subscriptions.dispatch("chats", this.chats)
                                 break
                         }
