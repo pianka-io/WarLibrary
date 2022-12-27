@@ -2,6 +2,7 @@ import {Messages} from "../common/Messages";
 import {StateManager} from "../StateManager";
 import {Event, EventSubscription, SubscriptionManager} from "../SubscriptionManager";
 import {References} from "../References";
+import {ChatHelper} from "../utilities/ChatHelper";
 
 export class ConnectionManager implements StateManager {
 
@@ -62,11 +63,7 @@ export class ConnectionManager implements StateManager {
                 case Messages.Commands.Socket.TIMEOUT:
                     this.connected = false
                     this.disconnected = true
-                    References.chatManager.add({
-                        timestamp: Date.now(),
-                        user: References.userManager.getWarChatUser(),
-                        message: "Connection timed out!"
-                    })
+                    References.chatManager.add(ChatHelper.makeBotChat("Connection timed out!"))
                     this.subscriptions.dispatch("connected", this.connected)
                     break
             }
@@ -86,11 +83,7 @@ export class ConnectionManager implements StateManager {
                     this.connected ||
                     !References.settingsManager.getSettings().autoReconnect) return
 
-                References.chatManager.add({
-                    timestamp: Date.now(),
-                    user: References.userManager.getWarChatUser(),
-                    message: "Connecting..."
-                })
+                References.chatManager.add(ChatHelper.makeBotChat("Connecting..."))
                 this.connect()
             }, 1000)
         }, 0)
