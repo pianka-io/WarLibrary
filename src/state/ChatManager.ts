@@ -39,7 +39,9 @@ export class ChatManager {
         this.subscriptions.dispatch("chats", this.chats)
     }
 
-
+    public whispersFor(username: string) {
+        this.whispers.filter((w) => w.user.name.toLowerCase() === username.toLowerCase())
+    }
 
     public forceUpdate() {
         this.subscriptions.dispatch("chats", this.chats)
