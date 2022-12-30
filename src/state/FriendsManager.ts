@@ -44,7 +44,7 @@ export class FriendsManager implements StateManager {
     }
 
     public list() {
-        References.messageBus.send("chat", "/friends list")
+        setTimeout(() => References.messageBus.send("chat", "/friends list"), 0)
     }
 
     public addFriend(name: string) {
@@ -127,7 +127,7 @@ export class FriendsManager implements StateManager {
                 error: null
             }
             this.subscriptions.dispatch("result", success)
-            References.messageBus.send("chat", "/friends list")
+            this.list()
         } else if (FriendsHelper.removedFriend(message)) {
             const success: Result = {
                 success: true,
@@ -136,7 +136,7 @@ export class FriendsManager implements StateManager {
                 error: null
             }
             this.subscriptions.dispatch("result", success)
-            References.messageBus.send("chat", "/friends list")
+            this.list()
         // errors
         } else if (FriendsHelper.addMaximumReached(message)) {
             const error: Result = {
