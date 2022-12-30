@@ -40,7 +40,7 @@ export class ChatManager {
     }
 
     public whispersFor(username: string) {
-        this.whispers.filter((w) => w.user.name.toLowerCase() === username.toLowerCase())
+        return this.whispers.filter((w) => w.user.name.toLowerCase() === username.toLowerCase())
     }
 
     public forceUpdate() {
