@@ -10,10 +10,12 @@ export type Chat = {
     timestamp: number,
     event: ChatEvent,
     user: User,
+    direction: ToFrom | null,
     message: string | null,
     channel: string | null
 }
 
+export type ToFrom = "to" | "from"
 export type ChatEvent = "talk" | "emote" | "whisper" | "info" | "error" | "broadcast" | "channel"
 
 export class ChatManager {
@@ -36,6 +38,8 @@ export class ChatManager {
         this.chats.push(chat)
         this.subscriptions.dispatch("chats", this.chats)
     }
+
+
 
     public forceUpdate() {
         this.subscriptions.dispatch("chats", this.chats)

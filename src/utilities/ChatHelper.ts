@@ -8,6 +8,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "talk",
             user: References.userManager.getByUsername(username),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -18,6 +19,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "emote",
             user: References.userManager.getByUsername(username),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -34,7 +36,8 @@ export namespace ChatHelper {
                 flags: "",
                 bot: false
             },
-            message: "(whisper) " + message,
+            direction: "from",
+            message: message,
             channel: null
         }
     }
@@ -43,8 +46,14 @@ export namespace ChatHelper {
         return {
             timestamp: Date.now(),
             event: "whisper",
-            user: References.userManager.getConnectedUser(),
-            message: "(to " + username + ") " + message,
+            user: {
+                name: username,
+                client: "[NONE]",
+                flags: "",
+                bot: false
+            },
+            direction: "to",
+            message: message,
             channel: null
         }
     }
@@ -54,6 +63,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "info",
             user: References.userManager.getServerUser(),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -64,6 +74,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "error",
             user: References.userManager.getServerUser(),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -74,6 +85,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "broadcast",
             user: References.userManager.getServerUser(),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -84,6 +96,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "channel",
             user: References.userManager.getWarChatUser(),
+            direction: "from",
             message: null,
             channel: channel
         }
@@ -94,6 +107,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "channel",
             user: References.userManager.getConnectedUser(),
+            direction: "from",
             message: message,
             channel: null
         }
@@ -104,6 +118,7 @@ export namespace ChatHelper {
             timestamp: Date.now(),
             event: "channel",
             user: References.userManager.getWarChatUser(),
+            direction: "from",
             message: message,
             channel: null
         }
