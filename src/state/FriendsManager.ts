@@ -59,6 +59,10 @@ export class FriendsManager implements StateManager {
         return this.friends
     }
 
+    public hasFriend(username: string) {
+        return !!this.friends.find((f) => f.name === username)
+    }
+
     private listen() {
         setInterval(() => this.list(), 30*1000)
 
@@ -116,8 +120,10 @@ export class FriendsManager implements StateManager {
         // friend list item
         } else if (FriendsHelper.friend(message)) {
             const friend = FriendsHelper.parseFriend(message)
-            this.friends.push(friend)
-            this.subscriptions.dispatch("list", this.friends)
+            if (!this.hasFriend(friend.name)) {
+                this.friends.push(friend)
+                this.subscriptions.dispatch("list", this.friends)
+            }
         // successes
         } else if (FriendsHelper.addedFriend(message)) {
             const success: Result = {
