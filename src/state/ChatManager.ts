@@ -69,6 +69,7 @@ export class ChatManager {
                         this.whispers.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
                         this.subscriptions.dispatch("whispers", this.whispers)
+                        console.log("WHISPERS: " + this.whispers)
                         return
                     case Protocols.Classic.TALK:
                         innerMessage = ProtocolHelper.parseQuoted(message)
