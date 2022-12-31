@@ -95,7 +95,7 @@ export namespace ChatHelper {
         return {
             timestamp: Date.now(),
             event: "channel",
-            user: null,
+            user: References.userManager.getServerUser(),
             direction: "from",
             message: null,
             channel: channel

@@ -22,11 +22,9 @@ export class UserManager implements StateManager {
     }
 
     public getConnectedUser(): User {
-        const fromChannel = this.getByUsername(References.profileManager.getProfile().username)
-
-        if (fromChannel) {
-            return fromChannel
-        } else {
+        try {
+            return this.getByUsername(References.profileManager.getProfile().username)
+        } catch {
             return {
                 name: References.profileManager.getProfile().username,
                 client: "[NONE]",
