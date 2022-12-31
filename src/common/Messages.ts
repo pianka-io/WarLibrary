@@ -14,6 +14,7 @@ export namespace Messages {
         export namespace App {
             export const START = "start"
             export const IDENTIFIER = "identifier"
+            export const OPEN = "open"
             export const QUIT = "quit"
         }
 
