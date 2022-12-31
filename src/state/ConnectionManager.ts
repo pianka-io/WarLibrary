@@ -19,6 +19,10 @@ export class ConnectionManager implements StateManager {
         this.subscriptions.addSubscription(event, a)
     }
 
+    public isConnected(): boolean {
+        return this.connected
+    }
+
     public busy = false
     public connect() {
         this.busy = true
