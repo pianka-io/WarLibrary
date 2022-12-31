@@ -103,16 +103,7 @@ export class ChatManager {
                         return
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-
-                        console.log("name '" + name() + "'")
-                        console.log("message '" + innerMessage + "'")
-                        console.log("includes " + (name() == "your friends"))
-
-                        if (name() == "your friends") {
-                            whisper = ChatHelper.makeOutboundWhisperChat("your friends", innerMessage)
-                        } else {
-                            whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
-                        }
+                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
                         this.chats.push(whisper)
                         this.whispers.push(whisper)
                         this.subscriptions.dispatch("chats", this.chats)
@@ -169,11 +160,7 @@ export class ChatManager {
                                         break
                                     case Protocols.Init6.Directions.TO:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        if (message.includes(" your friends ")) {
-                                            whisper = ChatHelper.makeOutboundWhisperChat("your friends", innerMessage)
-                                        } else {
-                                            whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
-                                        }
+                                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
                                         this.chats.push(whisper)
                                         this.whispers.push(whisper)
                                         this.subscriptions.dispatch("chats", this.chats)
