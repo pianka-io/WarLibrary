@@ -91,7 +91,7 @@ export class ConnectionManager implements StateManager {
 
                 References.chatManager.add(ChatHelper.makeBotChat("Connecting..."))
                 this.connect()
-            }, 1000)
+            }, 30*1000)
         }, 0)
     }
 }
