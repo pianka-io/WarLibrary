@@ -71,7 +71,7 @@ export class ChannelManager implements StateManager {
                         if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
                             References.messageBus.send("chat", "/channels")
                         }
-                        break
+                        return
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) {
@@ -89,7 +89,7 @@ export class ChannelManager implements StateManager {
                             })
                             this.subscriptions.dispatch("list", this.channels)
                         }
-                        break
+                        return
                 }
 
                 // init 6 proprietary
