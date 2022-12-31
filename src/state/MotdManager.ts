@@ -57,6 +57,9 @@ export class MotdManager implements StateManager {
                         return
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
+                        if ((innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) ||
+                            ((innerMessage.match(/\| /g) || []).length == 3)) return
+
                         this.motd.push(innerMessage)
                         this.subscriptions.dispatch("motd", this.motd)
                         return
@@ -74,6 +77,9 @@ export class MotdManager implements StateManager {
                         switch (event()) {
                             case Protocols.Init6.Events.TOPIC:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
+                                if ((innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) ||
+                                    ((innerMessage.match(/\| /g) || []).length == 3)) return
+
                                 this.motd.push(innerMessage)
                                 this.subscriptions.dispatch("motd", this.motd)
                                 break

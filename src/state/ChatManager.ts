@@ -5,6 +5,7 @@ import {Event, EventSubscription, SubscriptionManager} from "../SubscriptionMana
 import {References} from "../References";
 import {ProtocolHelper} from "../utilities/ProtocolHelper";
 import {ChatHelper} from "../utilities/ChatHelper";
+import {FriendsHelper} from "../utilities/FriendsHelper";
 
 export type Chat = {
     timestamp: number,
@@ -109,8 +110,10 @@ export class ChatManager {
                         } as WhisperUpdate)
                         break
                     case Protocols.Classic.INFO:
-                        if (References.motdManager.getReady()) return
                         innerMessage = ProtocolHelper.parseQuoted(message)
+
+                        if (References.motdManager.getReady()) return
+
                         if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                             !((innerMessage.match(/\| /g) || []).length == 3)) {
 

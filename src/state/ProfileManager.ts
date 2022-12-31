@@ -17,7 +17,7 @@ export class ProfileManager implements StateManager {
         username: "",
         password: "",
         home: "",
-        init6: false
+        init6: true
     }
 
     public initialize() {
