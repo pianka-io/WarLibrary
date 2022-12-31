@@ -43,6 +43,10 @@ export namespace ChatHelper {
     }
 
     export function makeOutboundWhisperChat(username: string, message: string): Chat {
+        if (username === "your friends") {
+            username = "All Friends"
+        }
+
         return {
             timestamp: Date.now(),
             event: "whisper",
