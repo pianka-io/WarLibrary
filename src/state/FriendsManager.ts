@@ -90,6 +90,10 @@ export class FriendsManager implements StateManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         this.handleMessage(innerMessage)
                         return
+                    case Protocols.Classic.ERROR:
+                        innerMessage = ProtocolHelper.parseQuoted(message)
+                        this.handleMessage(innerMessage)
+                        return
                 }
 
                 // init 6 proprietary
@@ -109,6 +113,10 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
+                                innerMessage = ProtocolHelper.parseInit6(message, 6)
+                                this.handleMessage(innerMessage)
+                                break
+                            case Protocols.Init6.Events.ERROR:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 this.handleMessage(innerMessage)
                                 break

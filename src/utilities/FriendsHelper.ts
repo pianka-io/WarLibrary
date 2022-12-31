@@ -2,7 +2,7 @@ import {Friend} from "../state/FriendsManager";
 
 export namespace FriendsHelper {
 
-    export const header             = (message: string) => message === "Your friends are:"
+    export const header             = (message: string) => message === "Your friends are:" || message === "You don't have any friends in your list. Use /friends add USERNAME to add a friend to your list."
     export const friend             = (message: string) => message.includes(" in the channel ") || message.endsWith(", offline.")
 
     export const addedFriend        = (message: string) => message.startsWith("Added ") && message.endsWith(" to your friends list.")
