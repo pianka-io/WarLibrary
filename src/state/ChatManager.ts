@@ -109,6 +109,7 @@ export class ChatManager {
                         } as WhisperUpdate)
                         break
                     case Protocols.Classic.INFO:
+                        if (References.motdManager.getReady()) return
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                             !((innerMessage.match(/\| /g) || []).length == 3)) {
@@ -190,7 +191,6 @@ export class ChatManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
-                            case Protocols.Init6.Events.TOPIC:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                                     !((innerMessage.match(/\| /g) || []).length == 3)) {
