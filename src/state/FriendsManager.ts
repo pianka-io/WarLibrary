@@ -82,7 +82,7 @@ export class FriendsManager implements StateManager {
                 switch (code) {
                     case Protocols.Classic.CHANNEL:
                         innerMessage = ProtocolHelper.parseQuoted(string)
-                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                        if (innerMessage.toLowerCase() == "Chat") {
                             this.list()
                         }
                         return
