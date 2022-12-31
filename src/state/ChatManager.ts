@@ -5,7 +5,6 @@ import {Event, EventSubscription, SubscriptionManager} from "../SubscriptionMana
 import {References} from "../References";
 import {ProtocolHelper} from "../utilities/ProtocolHelper";
 import {ChatHelper} from "../utilities/ChatHelper";
-import {FriendsHelper} from "../utilities/FriendsHelper";
 
 export type Chat = {
     timestamp: number,
@@ -104,7 +103,11 @@ export class ChatManager {
                         return
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                        if (message.includes(" your friends ")) {
+                            whisper = ChatHelper.makeOutboundWhisperChat("your friends", innerMessage)
+                        } else {
+                            whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                        }
                         this.chats.push(whisper)
                         this.whispers.push(whisper)
                         this.subscriptions.dispatch("chats", this.chats)
@@ -161,7 +164,11 @@ export class ChatManager {
                                         break
                                     case Protocols.Init6.Directions.TO:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                                        if (message.includes(" your friends ")) {
+                                            whisper = ChatHelper.makeOutboundWhisperChat("your friends", innerMessage)
+                                        } else {
+                                            whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                                        }
                                         this.chats.push(whisper)
                                         this.whispers.push(whisper)
                                         this.subscriptions.dispatch("chats", this.chats)
