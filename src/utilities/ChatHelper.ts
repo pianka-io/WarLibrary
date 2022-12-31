@@ -95,7 +95,7 @@ export namespace ChatHelper {
         return {
             timestamp: Date.now(),
             event: "channel",
-            user: References.userManager.getWarChatUser(),
+            user: null,
             direction: "from",
             message: null,
             channel: channel
