@@ -44,7 +44,7 @@ export class FriendsManager implements StateManager {
     }
 
     public list() {
-        setTimeout(() => References.messageBus.send("chat", "/friends list"), 0)
+        References.messageBus.send("chat", "/friends list")
     }
 
     public addFriend(name: string) {
@@ -82,7 +82,8 @@ export class FriendsManager implements StateManager {
                 switch (code) {
                     case Protocols.Classic.CHANNEL:
                         innerMessage = ProtocolHelper.parseQuoted(string)
-                        if (innerMessage.toLowerCase() == "Chat") {
+                        console.log(innerMessage.toLowerCase() + " == " + References.profileManager.getProfile().home.toLowerCase())
+                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
                             this.list()
                         }
                         return
