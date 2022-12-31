@@ -181,7 +181,7 @@ export class ChatManager {
                             case Protocols.Init6.Events.JOIN:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage != "Chat") {
-                                    this.chats.push(ChatHelper.makeInfoChat(innerMessage))
+                                    this.chats.push(ChatHelper.makeChannelChat(innerMessage))
                                     this.subscriptions.dispatch("chats", this.chats)
                                 }
                                 break
