@@ -44,6 +44,7 @@ export namespace ChatHelper {
 
     export function makeOutboundWhisperChat(username: string, message: string): Chat {
         if (username === "your friends") {
+            console.log("SWITCHING TO All Friends")
             username = "All Friends"
         }
 
