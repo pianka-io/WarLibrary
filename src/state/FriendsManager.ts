@@ -81,7 +81,10 @@ export class FriendsManager implements StateManager {
                 // classic telnet
                 switch (code) {
                     case Protocols.Classic.CHANNEL:
-                        this.list()
+                        innerMessage = ProtocolHelper.parseQuoted(string)
+                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                            this.list()
+                        }
                         return
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(string)
@@ -96,14 +99,17 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.CHANNEL:
                         switch (event()) {
                             case Protocols.Init6.Events.JOIN:
-                                this.list()
+                                innerMessage = ProtocolHelper.parseInit6(string, 6)
+                                if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                                    this.list()
+                                }
                                 break
                         }
                         break
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
-                                const innerMessage = ProtocolHelper.parseInit6(string, 6)
+                                innerMessage = ProtocolHelper.parseInit6(string, 6)
                                 this.handleMessage(innerMessage)
                                 break
                         }

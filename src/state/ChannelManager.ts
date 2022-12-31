@@ -68,7 +68,9 @@ export class ChannelManager implements StateManager {
                             users: 0
                         }
                         this.subscriptions.dispatch("current", this.currentChannel)
-                        References.messageBus.send("chat", "/channels")
+                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                            References.messageBus.send("chat", "/channels")
+                        }
                         break
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -104,7 +106,9 @@ export class ChannelManager implements StateManager {
                                     users: 0
                                 }
                                 this.subscriptions.dispatch("current", this.currentChannel)
-                                References.messageBus.send("chat", "/channels")
+                                if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                                    References.messageBus.send("chat", "/channels")
+                                }
                                 break
                         }
                         break
