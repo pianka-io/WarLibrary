@@ -105,7 +105,7 @@ export namespace ChatHelper {
     export function makeSelfChat(message: string): Chat {
         return {
             timestamp: Date.now(),
-            event: "channel",
+            event: "talk",
             user: References.userManager.getConnectedUser(),
             direction: "from",
             message: message,
@@ -116,7 +116,7 @@ export namespace ChatHelper {
     export function makeBotChat(message: string): Chat {
         return {
             timestamp: Date.now(),
-            event: "channel",
+            event: "info",
             user: References.userManager.getWarChatUser(),
             direction: "from",
             message: message,
