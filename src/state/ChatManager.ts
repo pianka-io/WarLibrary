@@ -15,6 +15,11 @@ export type Chat = {
     channel: string | null
 }
 
+export type WhisperUpdate = {
+    all: Chat[],
+    new: Chat
+}
+
 export type ToFrom = "to" | "from"
 export type ChatEvent = "talk" | "emote" | "whisper" | "info" | "error" | "broadcast" | "channel"
 
@@ -60,15 +65,20 @@ export class ChatManager {
                 let code = fields[0]
 
                 let name = () => fields[2]
+                let whisper
 
                 // classic telnet
                 switch (code) {
                     case Protocols.Classic.WHISPER_IN:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
-                        this.whispers.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
+                        whisper = ChatHelper.makeInboundWhisperChat(name(), innerMessage)
+                        this.chats.push(whisper)
+                        this.whispers.push(whisper)
                         this.subscriptions.dispatch("chats", this.chats)
-                        this.subscriptions.dispatch("whispers", this.whispers)
+                        this.subscriptions.dispatch("whispers", {
+                            all: this.whispers,
+                            new: whisper
+                        } as WhisperUpdate)
                         return
                     case Protocols.Classic.TALK:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -89,10 +99,14 @@ export class ChatManager {
                         return
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.chats.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
-                        this.whispers.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
+                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                        this.chats.push(whisper)
+                        this.whispers.push(whisper)
                         this.subscriptions.dispatch("chats", this.chats)
-                        this.subscriptions.dispatch("whispers", this.whispers)
+                        this.subscriptions.dispatch("whispers", {
+                            all: this.whispers,
+                            new: whisper
+                        } as WhisperUpdate)
                         break
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -128,13 +142,25 @@ export class ChatManager {
                                 switch (direction()) {
                                     case Protocols.Init6.Directions.FROM:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        this.chats.push(ChatHelper.makeInboundWhisperChat(name(), innerMessage))
+                                        whisper = ChatHelper.makeInboundWhisperChat(name(), innerMessage)
+                                        this.chats.push(whisper)
+                                        this.whispers.push(whisper)
                                         this.subscriptions.dispatch("chats", this.chats)
+                                        this.subscriptions.dispatch("whispers", {
+                                            all: this.whispers,
+                                            new: whisper
+                                        } as WhisperUpdate)
                                         break
                                     case Protocols.Init6.Directions.TO:
                                         innerMessage = ProtocolHelper.parseInit6(message, 8)
-                                        this.chats.push(ChatHelper.makeOutboundWhisperChat(name(), innerMessage))
+                                        whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
+                                        this.chats.push(whisper)
+                                        this.whispers.push(whisper)
                                         this.subscriptions.dispatch("chats", this.chats)
+                                        this.subscriptions.dispatch("whispers", {
+                                            all: this.whispers,
+                                            new: whisper
+                                        } as WhisperUpdate)
                                         break
                                 }
                                 break
