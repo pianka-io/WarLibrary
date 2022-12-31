@@ -81,14 +81,13 @@ export class FriendsManager implements StateManager {
                 // classic telnet
                 switch (code) {
                     case Protocols.Classic.CHANNEL:
-                        innerMessage = ProtocolHelper.parseQuoted(string)
-                        console.log(innerMessage.toLowerCase() + " == " + References.profileManager.getProfile().home.toLowerCase())
+                        innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
                             this.list()
                         }
                         return
                     case Protocols.Classic.INFO:
-                        innerMessage = ProtocolHelper.parseQuoted(string)
+                        innerMessage = ProtocolHelper.parseQuoted(message)
                         this.handleMessage(innerMessage)
                         return
                 }
@@ -100,7 +99,7 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.CHANNEL:
                         switch (event()) {
                             case Protocols.Init6.Events.JOIN:
-                                innerMessage = ProtocolHelper.parseInit6(string, 6)
+                                innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
                                     this.list()
                                 }
@@ -110,7 +109,7 @@ export class FriendsManager implements StateManager {
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
-                                innerMessage = ProtocolHelper.parseInit6(string, 6)
+                                innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 this.handleMessage(innerMessage)
                                 break
                         }
