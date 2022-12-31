@@ -103,12 +103,7 @@ export class ChatManager {
                         return
                     case Protocols.Classic.WHISPER_OUT:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-
-                        console.log("name " + name())
-                        console.log("message " + innerMessage)
-                        console.log("includes " + message.includes(" your friends "))
-
-                        if (message.includes(" your friends ")) {
+                        if (name() == "your friends") {
                             whisper = ChatHelper.makeOutboundWhisperChat("your friends", innerMessage)
                         } else {
                             whisper = ChatHelper.makeOutboundWhisperChat(name(), innerMessage)
