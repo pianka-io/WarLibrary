@@ -46,7 +46,11 @@ export class ChatManager {
     }
 
     public whispersFor(username: string): Chat[] {
-        return this.whispers.filter((w) => w.user.name.toLowerCase() === username.toLowerCase())
+        if (username === "All Friends") {
+            return this.whispers.filter((w) => References.friendsManager.hasFriend(w.user.name))
+        } else {
+            return this.whispers.filter((w) => w.user.name.toLowerCase() === username.toLowerCase())
+        }
     }
 
     public forceUpdate() {
