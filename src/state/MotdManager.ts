@@ -19,6 +19,10 @@ export class MotdManager implements StateManager {
         this.listen()
     }
 
+    public getReady(): boolean {
+        return this.ready
+    }
+
     public getMotd(): string[] {
         return this.motd
     }
