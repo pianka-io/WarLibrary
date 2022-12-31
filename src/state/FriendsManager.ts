@@ -60,6 +60,7 @@ export class FriendsManager implements StateManager {
     }
 
     public hasFriend(username: string) {
+        if (username == "your friends") return true
         return !!this.friends.find((f) => f.name.toLowerCase() === username.toLowerCase())
     }
 
