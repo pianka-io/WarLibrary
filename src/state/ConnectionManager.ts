@@ -54,6 +54,7 @@ export class ConnectionManager implements StateManager {
                         this.connected = true
                         this.disconnected = false
                         this.dontReconnect = false
+                        References.chatManager.add(ChatHelper.makeBotChat("Connected!"))
                         this.subscriptions.dispatch("connected", this.connected)
                     }
                     break
@@ -61,6 +62,7 @@ export class ConnectionManager implements StateManager {
                     if (this.connected) {
                         this.connected = false
                         this.disconnected = true
+                        References.chatManager.add(ChatHelper.makeBotChat("Disconnected!"))
                         this.subscriptions.dispatch("connected", this.connected)
                     }
                     break
