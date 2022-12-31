@@ -4,6 +4,7 @@ import {References} from "../References";
 import {Messages} from "../common/Messages";
 import {Protocols} from "../common/Protocols";
 import {ProtocolHelper} from "../utilities/ProtocolHelper";
+import {FriendsHelper} from "../utilities/FriendsHelper";
 
 export class MotdManager implements StateManager {
 
@@ -58,7 +59,8 @@ export class MotdManager implements StateManager {
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if ((innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) ||
-                            ((innerMessage.match(/\| /g) || []).length == 3)) return
+                            ((innerMessage.match(/\| /g) || []).length == 3) ||
+                            (FriendsHelper.isFriendsMessage(innerMessage))) return
 
                         this.motd.push(innerMessage)
                         this.subscriptions.dispatch("motd", this.motd)
