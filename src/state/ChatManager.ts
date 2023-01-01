@@ -130,15 +130,9 @@ export class ChatManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
 
                         if (References.motdManager.isReading()) return
-
-                        console.log("message: '" + innerMessage + "'")
-                        console.log("listing: " + this.listingChannels)
-                        console.log("if: " + ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) && !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels))
-
+                        
                         if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                             !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
-
-                            console.log("SUCCESS")
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
                             this.chats.push(ChatHelper.makeInfoChat(innerMessage))
@@ -218,15 +212,8 @@ export class ChatManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-
-                                console.log("message: '" + innerMessage + "'")
-                                console.log("listing: " + this.listingChannels)
-                                console.log("if: " + ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) && !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels))
-
                                 if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                                     !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
-
-                                    console.log("SUCCESS")
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
                                     this.chats.push(ChatHelper.makeInfoChat(innerMessage))
