@@ -107,9 +107,6 @@ export namespace ChatHelper {
     }
 
     export function makeSelfChat(message: string): Chat {
-        console.log(References.userManager)
-        console.log(References.userManager.getConnectedUser())
-
         return {
             timestamp: Date.now(),
             event: "talk",

@@ -23,14 +23,18 @@ export class UserManager implements StateManager {
 
     public getConnectedUser(): User {
         try {
-            return this.getByUsername(References.profileManager.getProfile().username)
-        } catch {
-            return {
-                name: References.profileManager.getProfile().username,
-                client: "[NONE]",
-                flags: "",
-                bot: false
+            const user = this.getByUsername(References.profileManager.getProfile().username)
+
+            if (user && user.name) {
+                return user
             }
+        } catch(error) {}
+
+        return {
+            name: References.profileManager.getProfile().username,
+            client: "[NONE]",
+            flags: "",
+            bot: false
         }
     }
 
