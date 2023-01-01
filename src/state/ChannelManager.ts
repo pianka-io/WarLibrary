@@ -44,7 +44,9 @@ export class ChannelManager implements StateManager {
         })
 
         setInterval(() => {
-            References.messageBus.send("chat", "/channels")
+            if (!References.chatManager.isListingChannels()) {
+                References.messageBus.send("chat", "/channels")
+            }
         }, 60*1000)
 
         References.messageBus.on(Messages.Channels.MESSAGES, (arg) => {
@@ -68,7 +70,8 @@ export class ChannelManager implements StateManager {
                             users: 0
                         }
                         this.subscriptions.dispatch("current", this.currentChannel)
-                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                        if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase() &&
+                            !References.chatManager.isListingChannels()) {
                             References.messageBus.send("chat", "/channels")
                         }
                         return
@@ -106,7 +109,8 @@ export class ChannelManager implements StateManager {
                                     users: 0
                                 }
                                 this.subscriptions.dispatch("current", this.currentChannel)
-                                if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase()) {
+                                if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase() &&
+                                    !References.chatManager.isListingChannels()) {
                                     References.messageBus.send("chat", "/channels")
                                 }
                                 break

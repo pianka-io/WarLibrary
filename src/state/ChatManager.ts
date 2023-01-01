@@ -28,20 +28,31 @@ export class ChatManager {
     private whispers: Chat[] = []
 
     private subscriptions: SubscriptionManager = new SubscriptionManager()
+    public subscribe<A> (event: Event, a: EventSubscription<A>) {
+        this.subscriptions.addSubscription(event, a)
+    }
+
+    private listingChannels = false
 
     public initialize() {
         this.listen()
     }
 
-    public subscribe<A> (event: Event, a: EventSubscription<A>) {
-        this.subscriptions.addSubscription(event, a)
+    public isListingChannels(): boolean {
+        return this.listingChannels
     }
-
-    public ignoreInfo = false
 
     public add(chat: Chat) {
         this.chats.push(chat)
         this.subscriptions.dispatch("chats", this.chats)
+    }
+
+    public send(message: string) {
+        const clean = message.trim().toLowerCase()
+        if (["/channels", "/chs", "/list"].includes(clean)) {
+            this.listingChannels = true
+            setTimeout(() => this.listingChannels = false, 250)
+        }
     }
 
     public whispersFor(username: string): Chat[] {
@@ -118,7 +129,7 @@ export class ChatManager {
                         if (References.motdManager.getReady()) return
 
                         if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
-                            !((innerMessage.match(/\| /g) || []).length == 3)) {
+                            !((innerMessage.match(/\| /g) || []).length == 3) && !this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
                             this.chats.push(ChatHelper.makeInfoChat(innerMessage))
@@ -199,7 +210,7 @@ export class ChatManager {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
-                                    !((innerMessage.match(/\| /g) || []).length == 3)) {
+                                    !((innerMessage.match(/\| /g) || []).length == 3) && !this.listingChannels) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
                                     this.chats.push(ChatHelper.makeInfoChat(innerMessage))
