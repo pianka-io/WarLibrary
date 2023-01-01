@@ -9,7 +9,7 @@ import {FriendsHelper} from "../utilities/FriendsHelper";
 export class MotdManager implements StateManager {
 
     private motd: string[] = []
-    private ready = true
+    private reading = true
 
     private subscriptions: SubscriptionManager = new SubscriptionManager()
     public subscribe<A> (event: Event, a: EventSubscription<A>) {
@@ -20,8 +20,8 @@ export class MotdManager implements StateManager {
         this.listen()
     }
 
-    public getReady(): boolean {
-        return this.ready
+    public isReading(): boolean {
+        return this.reading
     }
 
     public getMotd(): string[] {
@@ -35,7 +35,7 @@ export class MotdManager implements StateManager {
     private listen() {
         References.connectionManager.subscribe("connected", () => {
             this.motd = [];
-            this.ready = true
+            this.reading = true
             this.subscriptions.dispatch("motd", this.motd)
         })
 
@@ -54,7 +54,7 @@ export class MotdManager implements StateManager {
                 switch (code) {
                     case Protocols.Classic.CHANNEL:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        this.ready = false
+                        this.reading = false
                         return
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
@@ -73,7 +73,7 @@ export class MotdManager implements StateManager {
                 switch (code) {
                     case Protocols.Init6.Commands.CHANNEL:
                         innerMessage = ProtocolHelper.parseInit6(message, 6)
-                        this.ready = false
+                        this.reading = false
                         break
                     case Protocols.Init6.Commands.SERVER:
                         switch (event()) {
