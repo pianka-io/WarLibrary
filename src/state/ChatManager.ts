@@ -49,10 +49,17 @@ export class ChatManager {
 
     public send(message: string) {
         const clean = message.trim().toLowerCase()
+
+        console.log("clean: '" + clean + "'")
+        console.log("includes: " + ["/channels", "/chs", "/list"].includes(clean))
+
         if (["/channels", "/chs", "/list"].includes(clean)) {
             this.listingChannels = true
             setTimeout(() => this.listingChannels = false, 250)
         }
+
+        console.log("listing: " + this.listingChannels)
+
         References.messageBus.send("chat", message)
     }
 
