@@ -130,7 +130,7 @@ export class ChatManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
 
                         if (References.motdManager.isReading()) return
-                        
+
                         if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
                             !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
