@@ -52,7 +52,7 @@ export class ChatManager {
 
         if (["/channels", "/chs", "/list"].includes(clean)) {
             this.listingChannels = true
-            setTimeout(() => this.listingChannels = false, 1000)
+            setTimeout(() => this.listingChannels = false, 250)
         }
 
         References.messageBus.send("chat", message)
@@ -131,8 +131,8 @@ export class ChatManager {
 
                         if (References.motdManager.getReady()) return
 
-                        if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
-                            !((innerMessage.match(/\| /g) || []).length == 3) && !this.listingChannels) {
+                        if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                            !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
                             this.chats.push(ChatHelper.makeInfoChat(innerMessage))
@@ -212,8 +212,8 @@ export class ChatManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                if (!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
-                                    !((innerMessage.match(/\| /g) || []).length == 3) && !this.listingChannels) {
+                                if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                                    !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
                                     this.chats.push(ChatHelper.makeInfoChat(innerMessage))
