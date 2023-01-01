@@ -53,6 +53,7 @@ export class ChatManager {
             this.listingChannels = true
             setTimeout(() => this.listingChannels = false, 250)
         }
+        References.messageBus.send("chat", message)
     }
 
     public whispersFor(username: string): Chat[] {
