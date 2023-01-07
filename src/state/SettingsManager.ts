@@ -1,5 +1,7 @@
 import {Messages} from "../common/Messages";
 import {References} from "../References";
+import {Event, EventSubscription, SubscriptionManager} from "../SubscriptionManager";
+import {User} from "./UserManager";
 
 export type Settings = {
     autoReconnect: boolean,
@@ -24,6 +26,11 @@ export class SettingsManager {
     }
     private settings: Settings = this.defaultSettings
 
+    private subscriptions: SubscriptionManager = new SubscriptionManager()
+    public subscribe<A> (event: Event, a: EventSubscription<A>) {
+        this.subscriptions.addSubscription(event, a)
+    }
+
     public initialize() {
         this.listen()
     }
@@ -39,6 +46,7 @@ export class SettingsManager {
             Messages.Commands.Settings.SAVE,
             this.settings
         )
+        this.subscriptions.dispatch("settings", this.settings)
     }
 
     private listen() {
@@ -46,6 +54,7 @@ export class SettingsManager {
             switch (command) {
                 case Messages.Commands.Settings.READ:
                     this.settings = data as Settings
+                    this.subscriptions.dispatch("settings", this.settings)
                     break
             }
         })
