@@ -53,7 +53,7 @@ export class SettingsManager {
             switch (command) {
                 case Messages.Commands.Settings.READ:
                     this.settings = data as Settings
-                    this.subscriptions.dispatch("settings", this.getSettings())
+                    this.subscriptions.dispatch("settings", data)
                     break
             }
         })
