@@ -3,6 +3,7 @@ import {References} from "../References";
 
 export type Settings = {
     autoReconnect: boolean,
+    whisperTab: boolean,
     separateBots: boolean
     ignoreEmotes: boolean,
     ignoreAntiIdles: boolean,
@@ -14,6 +15,7 @@ export class SettingsManager {
 
     private defaultSettings = {
         autoReconnect: true,
+        whisperTab: true,
         separateBots: true,
         ignoreEmotes: false,
         ignoreAntiIdles: false,
