@@ -77,7 +77,7 @@ export class ChannelManager implements StateManager {
                         return
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
-                        if (innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) {
+                        if (innerMessage.startsWith("Listing ")) {
                             this.channels = []
                         } else if ((innerMessage.match(/\| /g) || []).length == 3) {
                             let tokens = innerMessage.split("|")
@@ -120,7 +120,7 @@ export class ChannelManager implements StateManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                if (innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) {
+                                if (innerMessage.startsWith("Listing ")) {
                                     this.channels = []
                                 } else if ((innerMessage.match(/\| /g) || []).length == 3) {
                                     let tokens = innerMessage.split("|")

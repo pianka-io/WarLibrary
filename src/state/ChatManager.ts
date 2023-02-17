@@ -131,7 +131,7 @@ export class ChatManager {
 
                         if (References.motdManager.isReading()) return
 
-                        if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                        if ((!(innerMessage.startsWith("Listing ")) &&
                             !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
@@ -212,7 +212,7 @@ export class ChatManager {
                         switch (event()) {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
-                                if ((!(innerMessage.startsWith("Listing ") && innerMessage.endsWith(" channels:")) &&
+                                if ((!(innerMessage.startsWith("Listing ")) &&
                                     !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
