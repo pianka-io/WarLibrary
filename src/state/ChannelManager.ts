@@ -71,7 +71,8 @@ export class ChannelManager implements StateManager {
                         }
                         this.subscriptions.dispatch("current", this.currentChannel)
                         if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase() &&
-                            !References.chatManager.isListingChannels()) {
+                            !References.chatManager.isListingChannels() &&
+                            References.profileManager.getProfile().init6) {
                             References.messageBus.send("chat", "/channels")
                         }
                         return
@@ -110,7 +111,8 @@ export class ChannelManager implements StateManager {
                                 }
                                 this.subscriptions.dispatch("current", this.currentChannel)
                                 if (innerMessage.toLowerCase() == References.profileManager.getProfile().home.toLowerCase() &&
-                                    !References.chatManager.isListingChannels()) {
+                                    !References.chatManager.isListingChannels()
+                                    && References.profileManager.getProfile().init6) {
                                     References.messageBus.send("chat", "/channels")
                                 }
                                 break
