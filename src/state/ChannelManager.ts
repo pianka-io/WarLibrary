@@ -44,7 +44,7 @@ export class ChannelManager implements StateManager {
         })
 
         setInterval(() => {
-            if (!References.chatManager.isListingChannels()) {
+            if (!References.chatManager.isListingChannels() && References.profileManager.getProfile().init6) {
                 References.messageBus.send("chat", "/channels")
             }
         }, 60*1000)

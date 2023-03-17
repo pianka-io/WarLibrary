@@ -44,7 +44,9 @@ export class FriendsManager implements StateManager {
     }
 
     public list() {
-        References.messageBus.send("chat", "/friends list")
+        if (References.profileManager.getProfile().init6) {
+            References.messageBus.send("chat", "/friends list")
+        }
     }
 
     public addFriend(name: string) {
