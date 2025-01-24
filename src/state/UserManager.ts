@@ -94,7 +94,7 @@ export class UserManager implements StateManager {
                         this.users.push({
                             "name": name(),
                             "flags": flags(),
-                            "client": client(),
+                            "client": fields.length > 4? client() : "[CHAT]",
                             bot: false
                         })
                         this.subscriptions.dispatch("users", this.users)
@@ -110,7 +110,11 @@ export class UserManager implements StateManager {
                     case Protocols.Classic.UPDATE:
                         let user = this.getByUsername(name())
                         user.flags = flags()
-                        user.client = client()
+                        if (fields.length > 4) {
+                            user.client = client()
+                        } else {
+                            user.client = "[CHAT]"
+                        }
                         break
                     case Protocols.Classic.NAME:
                         this.self = name()
