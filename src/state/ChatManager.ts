@@ -105,6 +105,9 @@ export class ChatManager {
                         return
                     case Protocols.Classic.BROADCAST:
                         innerMessage = ProtocolHelper.parseQuoted(message)
+                        if (innerMessage === "Due to a pending fix, new accounts cannot use the friends list until the next server restart.") {
+                            return
+                        }
                         this.chats.push(ChatHelper.makeBroadcastChat(innerMessage))
                         this.subscriptions.dispatch("chats", this.chats)
                         return
@@ -135,6 +138,9 @@ export class ChatManager {
                             !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
+                            if (innerMessage === "Due to a pending fix, new accounts cannot use the friends list until the next server restart.") {
+                                return
+                            }
                             this.chats.push(ChatHelper.makeInfoChat(innerMessage))
                             this.subscriptions.dispatch("chats", this.chats)
                         }
