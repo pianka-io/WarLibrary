@@ -80,12 +80,11 @@ export class ChannelManager implements StateManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.startsWith("Listing ")) {
                             this.channels = []
+                        } else if (innerMessage.startsWith("The Void | ")) {
+                            return
                         } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                             let tokens = innerMessage.split("|")
                             let name = tokens[0].trim()
-
-                            // Skip The Void channel if it has incomplete format
-                            if (name.toLowerCase() === "the void" && tokens.length < 5) return
 
                             if (this.channels.findIndex(c => c.name == name) > -1) return
 
@@ -127,12 +126,11 @@ export class ChannelManager implements StateManager {
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage.startsWith("Listing ")) {
                                     this.channels = []
+                                } else if (innerMessage.startsWith("The Void | ")) {
+                                    return
                                 } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                                     let tokens = innerMessage.split("|")
                                     let name = tokens[0].trim()
-
-                                    // Skip The Void channel if it has incomplete format
-                                    if (name.toLowerCase() === "the void" && tokens.length < 5) return
 
                                     if (this.channels.findIndex(c => c.name == name) > -1) return
 
