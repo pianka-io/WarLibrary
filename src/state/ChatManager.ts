@@ -134,17 +134,8 @@ export class ChatManager {
 
                         if (References.motdManager.isReading()) return
 
-                        // Debug logging
-                        if (innerMessage.includes("The Void")) {
-                            console.log("DEBUG: The Void message detected")
-                            console.log("  innerMessage:", JSON.stringify(innerMessage))
-                            console.log("  listingChannels:", this.listingChannels)
-                            console.log("  startsWith 'The Void | ':", innerMessage.startsWith("The Void | "))
-                            console.log("  pipe count:", (innerMessage.match(/\| /g) || []).length)
-                        }
-
                         if ((!(innerMessage.startsWith("Listing ")) &&
-                            !(innerMessage.startsWith("The Void | ")) &&
+                            !(innerMessage.match(/^The Void\s+\|/)) &&
                             !((innerMessage.match(/\| /g) || []).length == 4)) || this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
@@ -229,17 +220,8 @@ export class ChatManager {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 
-                                // Debug logging
-                                if (innerMessage.includes("The Void")) {
-                                    console.log("DEBUG Init6: The Void message detected")
-                                    console.log("  innerMessage:", JSON.stringify(innerMessage))
-                                    console.log("  listingChannels:", this.listingChannels)
-                                    console.log("  startsWith 'The Void | ':", innerMessage.startsWith("The Void | "))
-                                    console.log("  pipe count:", (innerMessage.match(/\| /g) || []).length)
-                                }
-                                
                                 if ((!(innerMessage.startsWith("Listing ")) &&
-                                    !(innerMessage.startsWith("The Void | ")) &&
+                                    !(innerMessage.match(/^The Void\s+\|/)) &&
                                     !((innerMessage.match(/\| /g) || []).length == 4)) || this.listingChannels) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)

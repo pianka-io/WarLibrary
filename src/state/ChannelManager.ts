@@ -80,7 +80,7 @@ export class ChannelManager implements StateManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.startsWith("Listing ")) {
                             this.channels = []
-                        } else if (innerMessage.startsWith("The Void | ")) {
+                        } else if (innerMessage.match(/^The Void\s+\|/)) {
                             return
                         } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                             let tokens = innerMessage.split("|")
@@ -126,7 +126,7 @@ export class ChannelManager implements StateManager {
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage.startsWith("Listing ")) {
                                     this.channels = []
-                                } else if (innerMessage.startsWith("The Void | ")) {
+                                } else if (innerMessage.match(/^The Void\s+\|/)) {
                                     return
                                 } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                                     let tokens = innerMessage.split("|")
