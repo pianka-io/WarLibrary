@@ -80,15 +80,18 @@ export class ChannelManager implements StateManager {
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if (innerMessage.startsWith("Listing ")) {
                             this.channels = []
-                        } else if ((innerMessage.match(/\| /g) || []).length == 3) {
+                        } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                             let tokens = innerMessage.split("|")
                             let name = tokens[0].trim()
+
+                            // Skip The Void channel if it has incomplete format
+                            if (name.toLowerCase() === "the void" && tokens.length < 5) return
 
                             if (this.channels.findIndex(c => c.name == name) > -1) return
 
                             this.channels.push({
                                 name: tokens[0].trim(),
-                                topic: tokens[3].trim(),
+                                topic: tokens[4].trim(),
                                 users: Number(tokens[1].trim())
                             })
                             this.subscriptions.dispatch("list", this.channels)
@@ -124,15 +127,18 @@ export class ChannelManager implements StateManager {
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if (innerMessage.startsWith("Listing ")) {
                                     this.channels = []
-                                } else if ((innerMessage.match(/\| /g) || []).length == 3) {
+                                } else if ((innerMessage.match(/\| /g) || []).length == 4) {
                                     let tokens = innerMessage.split("|")
                                     let name = tokens[0].trim()
+
+                                    // Skip The Void channel if it has incomplete format
+                                    if (name.toLowerCase() === "the void" && tokens.length < 5) return
 
                                     if (this.channels.findIndex(c => c.name == name) > -1) return
 
                                     this.channels.push({
                                         name: tokens[0].trim(),
-                                        topic: tokens[3].trim(),
+                                        topic: tokens[4].trim(),
                                         users: Number(tokens[1].trim())
                                     })
                                     this.subscriptions.dispatch("list", this.channels)

@@ -59,7 +59,7 @@ export class MotdManager implements StateManager {
                     case Protocols.Classic.INFO:
                         innerMessage = ProtocolHelper.parseQuoted(message)
                         if ((innerMessage.startsWith("Listing ")) ||
-                            ((innerMessage.match(/\| /g) || []).length == 3) ||
+                            ((innerMessage.match(/\| /g) || []).length == 4) ||
                             (FriendsHelper.isFriendsMessage(innerMessage))) return
 
                         this.motd.push(innerMessage)
@@ -80,7 +80,7 @@ export class MotdManager implements StateManager {
                             case Protocols.Init6.Events.TOPIC:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if ((innerMessage.startsWith("Listing ")) ||
-                                    ((innerMessage.match(/\| /g) || []).length == 3)) return
+                                    ((innerMessage.match(/\| /g) || []).length == 4)) return
 
                                 this.motd.push(innerMessage)
                                 this.subscriptions.dispatch("motd", this.motd)

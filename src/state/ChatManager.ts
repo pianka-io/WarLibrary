@@ -135,7 +135,7 @@ export class ChatManager {
                         if (References.motdManager.isReading()) return
 
                         if ((!(innerMessage.startsWith("Listing ")) &&
-                            !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
+                            !((innerMessage.match(/\| /g) || []).length == 4)) || this.listingChannels) {
 
                             innerMessage = ProtocolHelper.parseQuoted(message)
                             if (innerMessage === "Due to a pending fix, new accounts cannot use the friends list until the next server restart.") {
@@ -219,7 +219,7 @@ export class ChatManager {
                             case Protocols.Init6.Events.INFO:
                                 innerMessage = ProtocolHelper.parseInit6(message, 6)
                                 if ((!(innerMessage.startsWith("Listing ")) &&
-                                    !((innerMessage.match(/\| /g) || []).length == 3)) || this.listingChannels) {
+                                    !((innerMessage.match(/\| /g) || []).length == 4)) || this.listingChannels) {
 
                                     innerMessage = ProtocolHelper.parseInit6(message, 6)
                                     this.chats.push(ChatHelper.makeInfoChat(innerMessage))
