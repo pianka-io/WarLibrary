@@ -82,18 +82,25 @@ export class ChannelManager implements StateManager {
                             this.channels = []
                         } else if (innerMessage.match(/^The Void\s+\|/)) {
                             return
-                        } else if ((innerMessage.match(/\| /g) || []).length == 4) {
+                        } else if ((innerMessage.match(/\| /g) || []).length >= 4) {
                             let tokens = innerMessage.split("|")
-                            let name = tokens[0].trim()
 
-                            if (this.channels.findIndex(c => c.name == name) > -1) return
+                            // Check if token[2] matches the timing pattern (e.g., "123.456s")
+                            if (tokens.length >= 5 && tokens[2].trim().match(/^\d+\.\d+s$/)) {
+                                let name = tokens[0].trim()
 
-                            this.channels.push({
-                                name: tokens[0].trim(),
-                                topic: tokens[4].trim(),
-                                users: Number(tokens[1].trim())
-                            })
-                            this.subscriptions.dispatch("list", this.channels)
+                                if (this.channels.findIndex(c => c.name == name) > -1) return
+
+                                // If there are extra pipes, they're in the topic - join from index 4 onwards
+                                let topic = tokens.slice(4).join("|").trim()
+
+                                this.channels.push({
+                                    name: name,
+                                    topic: topic,
+                                    users: Number(tokens[1].trim())
+                                })
+                                this.subscriptions.dispatch("list", this.channels)
+                            }
                         }
                         return
                 }
@@ -128,18 +135,25 @@ export class ChannelManager implements StateManager {
                                     this.channels = []
                                 } else if (innerMessage.match(/^The Void\s+\|/)) {
                                     return
-                                } else if ((innerMessage.match(/\| /g) || []).length == 4) {
+                                } else if ((innerMessage.match(/\| /g) || []).length >= 4) {
                                     let tokens = innerMessage.split("|")
-                                    let name = tokens[0].trim()
 
-                                    if (this.channels.findIndex(c => c.name == name) > -1) return
+                                    // Check if token[2] matches the timing pattern (e.g., "123.456s")
+                                    if (tokens.length >= 5 && tokens[2].trim().match(/^\d+\.\d+s$/)) {
+                                        let name = tokens[0].trim()
 
-                                    this.channels.push({
-                                        name: tokens[0].trim(),
-                                        topic: tokens[4].trim(),
-                                        users: Number(tokens[1].trim())
-                                    })
-                                    this.subscriptions.dispatch("list", this.channels)
+                                        if (this.channels.findIndex(c => c.name == name) > -1) return
+
+                                        // If there are extra pipes, they're in the topic - join from index 4 onwards
+                                        let topic = tokens.slice(4).join("|").trim()
+
+                                        this.channels.push({
+                                            name: name,
+                                            topic: topic,
+                                            users: Number(tokens[1].trim())
+                                        })
+                                        this.subscriptions.dispatch("list", this.channels)
+                                    }
                                 }
                                 break
                         }
